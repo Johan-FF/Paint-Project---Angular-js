@@ -1,0 +1,18 @@
+<section *ngIf="ver_descripcion" class="fondo-perfil">
+    <div class="fondo-foto">
+        <img [src]="ubicacion_foto" alt="Foto Perfil" class="img">
+    </div>
+    <div class="fondo-descripcion">
+        <h3>Nombre Apellido</h3>
+        <h6>En línea</h6>
+    </div>
+</section>
+<section *ngIf="!ver_descripcion" class="fondo-perfil-principal">
+    <div class="fondo-foto">
+        <img [src]="ubicacion_foto" alt="Foto Perfil" class="img-principal">
+    </div>
+    <div class="fondo-descripcion-principal">
+        <h3>Nombre Apellido</h3>
+        <h6>En línea</h6>
+    </div>
+</section>

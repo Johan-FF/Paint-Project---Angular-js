@@ -1,0 +1,21 @@
+.fondo{
+    height: 97vh;
+    max-height: 97vh;
+    max-width: 100%;
+}
+.panel-herramientas{
+    box-shadow: 0px 10px 30px #EEEEEE90;
+    max-height: 10%;
+    max-width: 100%;
+    height: 10%;
+    margin: 10px;
+    border-radius: 30px;
+}
+.panel-dibujo{
+    box-shadow: 0px 10px 20px #EEEEEE50;
+    max-height: 88%;
+    max-width: 100%;
+    height: 88%;
+    margin: 10px;
+    border-radius: 30px;
+}
