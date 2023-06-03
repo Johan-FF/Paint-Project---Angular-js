@@ -5,22 +5,29 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ContentDrawingComponent } from './pages/drawing/content-drawing/content-drawing.component';
 import { ContentHomeComponent } from './pages/home/content-home/content-home.component';
-import { ContentLoginComponent } from './pages/login/content-login/content-login.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { PanelHerrramientasComponent } from './pages/drawing/panel-herrramientas/panel-herrramientas.component';
+import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { ContentSingupComponent } from './pages/singup/content-singup/content-singup.component';
+import { ContentSinginComponent } from './pages/singin/content-singin/content-singin.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ContentDrawingComponent,
     ContentHomeComponent,
-    ContentLoginComponent,
     ProfileComponent,
-    PanelHerrramientasComponent
+    PageNotFoundComponent,
+    ContentSingupComponent,
+    ContentSinginComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

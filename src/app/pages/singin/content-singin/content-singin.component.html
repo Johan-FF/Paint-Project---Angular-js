@@ -1,0 +1,22 @@
+<form [formGroup]="form" (ngSubmit)="enviarFormulario()" class="fondo-login">
+    <section class="contenedor">
+        <h1 class="titulo"><strong>PAINT</strong></h1>
+
+        <label class="subtitulo">Correo Electrónico:</label>
+        <input formControlName="email" type="email" class="input" placeholder="correo@drawing.com">
+        <label class="label-error" *ngIf="labelsError[0].esVisible[0]">Correo Electrónico Obligatorio</label>
+        <label class="label-error" *ngIf="labelsError[0].esVisible[1]">Este campo debe ser un correo electrónico</label>
+
+        <label class="subtitulo">Contraseña:</label>
+        <input formControlName="password" type="password" class="input" placeholder="***********">
+        <label class="label-error" *ngIf="labelsError[1].esVisible[0]">Contraseña Obligatorio</label>
+        <label class="label-error" *ngIf="labelsError[1].esVisible[1]">Este campo debe tener mínimo 8 caracteres</label>
+
+        <label class="label-error" *ngIf="status=='PasswordError'">Contraseña Incorrecta</label>
+        <label class="label-error" *ngIf="status=='EmailError'">Correo Electrónico Incorrecto</label>
+        <div class="contenedor-botones">
+            <button class="boton"><strong>Ingresar</strong></button>
+            <button (click)="navegarARegistro()" class="boton"><strong>Registrar</strong></button>
+        </div>
+    </section>
+</form>

@@ -1,8 +1,66 @@
+
 <main class="fondo">
     <section class="panel-herramientas">
-        <app-panel-herramientas></app-panel-herramientas>
+        <section class="fondo-herramientas">
+            <div class="container">
+                <ul id="opciones" class="menu" (click)="viewMenu('options')">
+                    <li class="punto-menu"></li>
+                    <li class="punto-menu"></li>
+                    <li class="punto-menu"></li>
+                    <li class="punto-menu"></li>
+                </ul>
+                <ul id="reset" class="menu" (click)="cancelAllDrawings()">
+                    <li><div class="linea-reset-1"></div></li>
+                    <li><div class="linea-reset-2"></div></li>
+                    <li><div class="linea-reset-3"></div></li>
+                    <li><div class="linea-reset-4"></div></li>
+                </ul>
+                <ul id="opciones-menu" class="submenu" *ngIf="menus[0].view">
+                    <button>Home</button>
+                </ul>
+            </div>
+            <div class="container">
+                <div class="container-imagenes">
+                    <img [src]="imgLocations.regularPolygonLocation" alt="Polígono Regular" class="img" (click)="viewMenu('regularPolygon')">
+                    <ul id="desplegable-izquierda" class="submenu" *ngIf="menus[1].view">
+                        <li (click)="drawCircle()"><div class="circle"></div></li>
+                        <li (click)="drawRegularPolygon()"><div class="polygon"></div><div class="details-polygon"> Sides: <input [(ngModel)]="numSides" type="number"></div></li>
+                    </ul>
+                    <img [src]="imgLocations.irregularPolygonLocation" alt="Polígono Irregular" class="img" (click)="viewMenu('irregularPolygon')">
+                    <ul id="desplegable-derecha" class="submenu" *ngIf="menus[2].view">
+                        <li>opcion 1</li>
+                        <li>opcion 2</li>
+                        <li>opcion 3</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="container">
+                <div class="container-imagenes">
+                    <img [src]="imgLocations.colorsLocation" alt="Colores" class="img" (click)="viewMenu('colors')">
+                    <ul id="desplegable-izquierda" class="submenu" *ngIf="menus[3].view">
+                        <li>opcion 1</li>
+                        <li>opcion 2</li>
+                        <li>opcion 3</li>
+                    </ul>
+                    <img [src]="imgLocations.brushesLocation" alt="Pinceles" class="img" (click)="viewMenu('brushes')">
+                    <ul id="desplegable-derecha" class="submenu" *ngIf="menus[4].view">
+                        <li (click)="drawLine()"><div class="line"></div></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="container">
+                <div class="container-perfiles" (click)="viewMenu('profiles')">
+                    <app-profile [ver_descripcion]="true" ></app-profile>
+                    <ul id="desplegable-centro" class="submenu" *ngIf="menus[5].view">
+                        <li>opcion 1</li>
+                        <li>opcion 2</li>
+                        <li>opcion 3</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
     </section>
-    <section class="panel-dibujo">
-
+    <section id="panel-dibujo" class="panel-dibujo">
+        <canvas id="canvas" class="canvas"></canvas>
     </section>
 </main>

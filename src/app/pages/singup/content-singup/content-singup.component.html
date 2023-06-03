@@ -1,0 +1,45 @@
+<form [formGroup]="form" (ngSubmit)="enviarFormulario()" class="fondo-siging">
+    <section class="contenedor">
+        <h1 class="titulo"><strong>SINGIN</strong></h1>
+
+        <label class="subtitulo">Nombre:</label>
+        <input formControlName="nombre" type="text" class="input" placeholder="Nombre">
+        <label class="label-error" *ngIf="labelsError[0].esVisible[0]">Nombre Obligatorio</label>
+
+        <label class="subtitulo">Apellido:</label>
+        <input formControlName="apellido" type="text" class="input" placeholder="Apellido">
+        <label class="label-error" *ngIf="labelsError[1].esVisible[0]">Apellido Obligatorio</label>
+
+        <label class="subtitulo">Nickname</label>
+        <input formControlName="nickname" type="text" class="input" placeholder="Nickname">
+        <label class="label-error" *ngIf="labelsError[2].esVisible[0]">Nickname</label>
+
+        <label class="subtitulo">Correo Electrónico:</label>
+        <input formControlName="email" type="email" class="input" placeholder="correo@drawing.com">
+        <label class="label-error" *ngIf="labelsError[3].esVisible[0]">Correo Electrónico Obligatorio</label>
+        <label class="label-error" *ngIf="labelsError[3].esVisible[1]">Este campo debe ser un correo electrónico</label>
+
+
+        <label class="subtitulo">Contraseña:</label>
+        <input formControlName="password" type="password" class="input" placeholder="***********">
+        <label class="label-error" *ngIf="labelsError[4].esVisible[0]">Contraseña Obligatoria</label>
+        <label class="label-error" *ngIf="labelsError[4].esVisible[1]">Este campo debe tener mínimo 8 caracteres</label>
+
+
+        <label class="subtitulo">Confirmar Contraseña:</label>
+        <input formControlName="con_password" type="password" class="input" placeholder="***********">
+        <label class="label-error" *ngIf="labelsError[5].esVisible[0]">Contraseña Obligatoria</label>
+        <label class="label-error" *ngIf="labelsError[5].esVisible[1]">Este campo debe tener mínimo 8 caracteres</label>
+
+
+        <label class="label-error" *ngIf="labelsError[6].esVisible[0]">Contraseña no Coincide</label>
+
+        <label class="label-correct" *ngIf="status=='Correct'">Usuario Creado</label>
+        <label class="label-error" *ngIf="status=='UserError'">Usuario Existente</label>
+
+        <div class="contenedor-boton">
+            <button (click)="navegarASingin()" class="boton"><strong>Volver</strong></button>
+            <button class="boton"><strong>Registrarme</strong></button>
+        </div>
+    </section>
+</form>
