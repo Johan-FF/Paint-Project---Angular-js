@@ -5,6 +5,8 @@ import { ContentDrawingComponent } from './pages/drawing/content-drawing/content
 import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.component';
 import { ContentSingupComponent } from './pages/singup/content-singup/content-singup.component';
 import { ContentSinginComponent } from './pages/singin/content-singin/content-singin.component';
+import { AuthGuard } from './guards/auth.guard';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
   {
@@ -15,23 +17,24 @@ const routes: Routes = [
   {
     path: 'login',
     title: 'Login - PAINT',
-    //component: MenuDesplegableComponent
     component: ContentSinginComponent
   },
   {
     path: 'singup',
     title: 'Singup - PAINT',
-    component: ContentSingupComponent
+    component: ContentSingupComponent 
   },
   {
     path: 'home',
     title: 'Home - PAINT',
-    component: ContentHomeComponent
+    component: ContentHomeComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: 'drawing',
+    path: 'drawing/:id',
     title: 'Drawing - PAINT',
-    component: ContentDrawingComponent
+    component: ContentDrawingComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: '**',
@@ -46,7 +49,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes),
+    HttpClientModule
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

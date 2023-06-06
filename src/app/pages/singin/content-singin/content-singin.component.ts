@@ -1,8 +1,9 @@
 import { Component, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoginInterface } from 'src/app/models/login.interface';
+import { LoginInterface } from 'src/app/models/ilogin.interface';
 import { RequestStatus } from 'src/app/models/request-status.model';
+import { AuthService } from 'src/app/services/api-users/auth.service';
 import { LoginService } from 'src/app/services/api-users/login.service';
 
 @Component({
@@ -21,10 +22,11 @@ export class ContentSinginComponent {
   constructor(
     private _fb: FormBuilder,
     private _router: Router,
-    private _api: LoginService
+    private _api: LoginService,
+    private _auth: AuthService
   ) {}
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.form = this.createForm();
   }
 
@@ -41,11 +43,16 @@ export class ContentSinginComponent {
       const user: LoginInterface = this.form.value  
       this._api.loginByEmail(user)
       .subscribe({
-        next: () => {
+        next: (data) => {
+          this._auth.setAutenticado(true)
+          this._auth.setId(data.id)
+          this._auth.setToken(data.message)
+          this._auth.setUser()
           this.status = 'Correct'
           this._router.navigate(['/home'])
         },
         error: (e) => {
+          this._auth.setAutenticado(false)
           if( e.error.message==='PasswordError' ){
             this.status = 'PasswordError'
           } else if( e.error.message==='EmailError' ) {

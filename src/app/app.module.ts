@@ -8,9 +8,14 @@ import { ContentHomeComponent } from './pages/home/content-home/content-home.com
 import { ProfileComponent } from './components/profile/profile.component';
 import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ContentSingupComponent } from './pages/singup/content-singup/content-singup.component';
 import { ContentSinginComponent } from './pages/singin/content-singin/content-singin.component';
+import { AuthInterceptor } from './guards/auth.interceptor';
+
+import { WebSocketSubject } from 'rxjs/webSocket';
+import { webSocket } from 'rxjs/webSocket';
+import { Observable, Subject } from 'rxjs';
 
 @NgModule({
   declarations: [
@@ -29,7 +34,13 @@ import { ContentSinginComponent } from './pages/singin/content-singin/content-si
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

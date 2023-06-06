@@ -2,15 +2,9 @@
     <section class="container-panel-lateral">
         <h2 class="titulo">Proyectos</h2>
         <div class="container-proyectos">
-            <button routerLink="/drawing" class="boton">Proyecto 1.</button>
-            <button routerLink="/drawing" class="boton">Proyecto 1.</button>
-            <button routerLink="/drawing" class="boton">Proyecto 1.</button>
-            <button routerLink="/drawing" class="boton">Proyecto 1.</button>
-        </div>
-        <h2 class="titulo">Amigos</h2>
-        <div class="container-amigos">
-            <app-profile [ver_descripcion]="true"></app-profile>
-            <app-profile [ver_descripcion]="true"></app-profile>
+            <ng-container *ngFor="let draw of draws">
+                <button (click)="navegarADibujo(draw.name)" class="boton">{{draw.name}}</button>
+            </ng-container>
         </div>
     </section>
     <section class="container-dibujos">
@@ -21,6 +15,20 @@
         <div class="container-dibujo"></div>
     </section>
     <section class="container-perfil">
-        <app-profile [ver_descripcion]="false"></app-profile>
+        <div>
+            <app-profile [ver_descripcion]="false" [user]="authService.getUser()" ></app-profile>
+        </div>
+
+        <button id="boton-nuevo" (click)="setNuevoDraw()" class="boton">Nuevo</button>
+        <div class="submenu" *ngIf="nuevoDraw">
+            <p>Nombre: </p><input [(ngModel)]="nombreNuevo" type="text">
+        </div>
+        <button *ngIf="nuevoDraw" id="boton-nuevo" (click)="crearNuevoDraw()" class="boton">Confirmar</button>
+
+        <button id="boton-nuevo" (click)="setDrawExistente()" class="boton">Ingresar</button>
+        <div class="submenu" *ngIf="drawExistente">
+            <p>Código: </p><input [(ngModel)]="idExistente" type="text">
+        </div>
+        <button *ngIf="drawExistente" id="boton-nuevo" (click)="redireccionarDrawID()" class="boton">Confirmar</button>
     </section>
 </main>

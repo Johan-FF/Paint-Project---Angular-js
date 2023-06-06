@@ -16,31 +16,22 @@
                     <li><div class="linea-reset-4"></div></li>
                 </ul>
                 <ul id="opciones-menu" class="submenu" *ngIf="menus[0].view">
-                    <button>Home</button>
+                    <button (click)="redirectHome()" >Home</button>
+                    <button (click)="copyCode()" >Copy Code Share</button>
+                    <label class="label-correct" *ngIf="copiedLink">Copied Link</label>
                 </ul>
             </div>
-            <div class="container">
+            <div id="container-central" class="container">
                 <div class="container-imagenes">
                     <img [src]="imgLocations.regularPolygonLocation" alt="Polígono Regular" class="img" (click)="viewMenu('regularPolygon')">
                     <ul id="desplegable-izquierda" class="submenu" *ngIf="menus[1].view">
                         <li (click)="drawCircle()"><div class="circle"></div></li>
                         <li (click)="drawRegularPolygon()"><div class="polygon"></div><div class="details-polygon"> Sides: <input [(ngModel)]="numSides" type="number"></div></li>
                     </ul>
-                    <img [src]="imgLocations.irregularPolygonLocation" alt="Polígono Irregular" class="img" (click)="viewMenu('irregularPolygon')">
-                    <ul id="desplegable-derecha" class="submenu" *ngIf="menus[2].view">
-                        <li>opcion 1</li>
-                        <li>opcion 2</li>
-                        <li>opcion 3</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="container">
-                <div class="container-imagenes">
                     <img [src]="imgLocations.colorsLocation" alt="Colores" class="img" (click)="viewMenu('colors')">
-                    <ul id="desplegable-izquierda" class="submenu" *ngIf="menus[3].view">
-                        <li>opcion 1</li>
-                        <li>opcion 2</li>
-                        <li>opcion 3</li>
+                    <ul id="desplegable-central" class="submenu" *ngIf="menus[3].view">
+                        <li> <div class="details-colors">Fill:   <input (change)="fillColorSelected($event)" type="color"></div></li>
+                        <li> <div class="details-colors">Border:   <input (change)="borderColorSelected($event)" type="color"></div></li>
                     </ul>
                     <img [src]="imgLocations.brushesLocation" alt="Pinceles" class="img" (click)="viewMenu('brushes')">
                     <ul id="desplegable-derecha" class="submenu" *ngIf="menus[4].view">
@@ -50,11 +41,12 @@
             </div>
             <div class="container">
                 <div class="container-perfiles" (click)="viewMenu('profiles')">
-                    <app-profile [ver_descripcion]="true" ></app-profile>
+                    <app-profile [ver_descripcion]="true" [user]="authService.getUser()"></app-profile>
                     <ul id="desplegable-centro" class="submenu" *ngIf="menus[5].view">
-                        <li>opcion 1</li>
-                        <li>opcion 2</li>
-                        <li>opcion 3</li>
+                        <ng-container *ngFor="let user of users">
+                            <li><app-profile [ver_descripcion]="true" [user]="user"></app-profile>
+                            </li>
+                        </ng-container>
                     </ul>
                 </div>
             </div>

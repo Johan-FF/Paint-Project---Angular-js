@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RequestStatus } from 'src/app/models/request-status.model';
-import { UserInterface } from 'src/app/models/user.interface';
+import { UserInterface } from 'src/app/models/iuser.interface';
 import { SingupService } from 'src/app/services/api-users/singup.service';
 
 @Component({

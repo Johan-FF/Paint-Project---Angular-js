@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { fabric } from 'fabric'
+import { ColorsService } from './colors.service';
+import { FiguresService } from './figures.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +11,16 @@ export class CircleService {
   private circle: fabric.Circle | null = null
   private mouseDown: boolean = false
   private initCoordinates = {x: 0, y: 0}
+  private colorFill: string = ''
+  private colorBorder: string = ''
   private mouseDownHandler?: (event: fabric.IEvent) => void 
   private mouseMoveHandler?: (event: fabric.IEvent) => void
   private mouseUpHandler?: (event: fabric.IEvent) => void
+
+  constructor(
+    private colorsService: ColorsService,
+    private figuresService: FiguresService
+  ) {}
 
   public setCanvas(_canvas: fabric.Canvas): void {
     this.canvas = _canvas
@@ -33,15 +42,26 @@ export class CircleService {
     if( pointer ){
       this.initCoordinates.x = pointer.x
       this.initCoordinates.y = pointer.y
+      this.colorFill = this.colorsService.getColorFill()
+      this.colorBorder = this.colorsService.getColorBorder()
       this.circle = new fabric.Circle({
         radius: 1,
-        fill: '#EEEEEE',
+        fill: this.colorFill,
         left: pointer.x,
         top: pointer.y,
-        stroke: '#EEEEEE90',
+        stroke: this.colorBorder,
         strokeWidth: 15
       })
       this.canvas.add(this.circle)
+      this.figuresService.addFigure({
+        name: 'circle',
+        pointers: [],
+        radius: 1,
+        fill: this.colorFill,
+        left: pointer.x,
+        top: pointer.y,
+        stroke: this.colorBorder,
+      }, true)
       this.canvas.requestRenderAll()
     }
   }
@@ -53,11 +73,22 @@ export class CircleService {
         Math.pow(pointer.x-this.initCoordinates.x, 2) +
         Math.pow(pointer.y-this.initCoordinates.y, 2)
       ) 
+      const newLeft = pointer.x<this.initCoordinates.x?pointer.x:this.initCoordinates.x
+      const newTop = pointer.y<this.initCoordinates.y?pointer.y:this.initCoordinates.y  
       this.circle?.set({
         radius: radio/3,
-        left: pointer.x<this.initCoordinates.x?pointer.x:this.initCoordinates.x,
-        top: pointer.y<this.initCoordinates.y?pointer.y:this.initCoordinates.y
+        left: newLeft,
+        top: newTop
       })
+      this.figuresService.updateFigure({
+        name: 'circle',
+        pointers: [],
+        radius: radio/3,
+        fill: this.colorFill,
+        left: newLeft,
+        top: newTop,
+        stroke: this.colorBorder,
+      }, true)
       this.canvas.requestRenderAll()
     }
   }
@@ -70,5 +101,27 @@ export class CircleService {
     this.canvas.off('mouse:down', this.mouseDownHandler)
     this.canvas.off('mouse:move', this.mouseMoveHandler)
     this.canvas.off('mouse:up', this.mouseUpHandler)
+  }
+
+  public drawCircleByObject(circle: any): void {
+    this.circle = new fabric.Circle({
+      radius: circle.radius,
+      fill: circle.fill,
+      left: circle.left,
+      top: circle.top,
+      stroke: circle.stroke,
+      strokeWidth: 15
+    })
+    this.canvas.add(this.circle)
+    this.figuresService.addFigure({
+      name: 'circle',
+      pointers: [],
+      radius: circle.radius,
+      fill: circle.fill,
+      left: circle.left,
+      top: circle.top,
+      stroke: circle.stroke,
+    }, false)
+    this.canvas.requestRenderAll()
   }
 }

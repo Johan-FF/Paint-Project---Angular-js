@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { fabric } from 'fabric'
+import { ColorsService } from './colors.service';
+import { FiguresService } from './figures.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +12,16 @@ export class RegularPolygonService {
   private mouseDown: boolean = false
   private numSides!: number
   private initCoordinates = { x: 0, y: 0 }
+  private colorFill: string = ''
+  private colorBorder: string = ''
   private mouseDownHandler?: (event: fabric.IEvent) => void
   private mouseMoveHandler?: (event: fabric.IEvent) => void
   private mouseUpHandler?: (event: fabric.IEvent) => void
+
+  constructor(
+    private colorsService: ColorsService,
+    private figuresService: FiguresService
+  ) {}
 
   public setCanvas(_canvas: fabric.Canvas): void {
     this.canvas = _canvas
@@ -36,15 +45,26 @@ export class RegularPolygonService {
       this.initCoordinates.x = pointer.x
       this.initCoordinates.y = pointer.y
       const pointers = this.getPoints(pointer)
+      this.colorFill = this.colorsService.getColorFill()
+      this.colorBorder = this.colorsService.getColorBorder()
       this.regularPolygon = new fabric.Polygon(pointers, {
-        fill: '#EEEEEE',
+        fill: this.colorFill,
         left: pointer.x,
         top: pointer.y,
-        stroke: '#EEEEEE90',
+        stroke: this.colorBorder,
         strokeWidth: 15,
         objectCaching: false,
       })
       this.canvas.add(this.regularPolygon)
+      this.figuresService.addFigure({
+        name: 'polygon',
+        pointers: pointers.map(point => [point.x, point.y]).flat(),
+        radius: 0,
+        fill: this.colorFill,
+        left: pointer.x,
+        top: pointer.y,
+        stroke: this.colorBorder,
+      }, true)
       this.canvas.requestRenderAll()
     }
   }
@@ -54,14 +74,28 @@ export class RegularPolygonService {
       const pointer = this.canvas.getPointer(event.e)
       this.canvas.remove(this.regularPolygon)
       const pointers = this.getPoints(pointer)
+      this.colorFill = this.colorsService.getColorFill()
+      this.colorBorder = this.colorsService.getColorBorder()
+      const newLeft = pointer.x < this.initCoordinates.x ? pointer.x : this.initCoordinates.x
+      const newTop = pointer.y < this.initCoordinates.y ? pointer.y : this.initCoordinates.y  
       this.regularPolygon = new fabric.Polygon(pointers, {
-        fill: '#EEEEEE',
-        left: pointer.x < this.initCoordinates.x ? pointer.x : this.initCoordinates.x,
-        top: pointer.y < this.initCoordinates.y ? pointer.y : this.initCoordinates.y,
-        stroke: '#EEEEEE90',
+        fill: this.colorFill,
+        left: newLeft,
+        top: newTop,
+        stroke: this.colorBorder,
         strokeWidth: 15,
         objectCaching: false,
       })
+      //this.figuresService.deleteFirst()
+      this.figuresService.updateFigure({
+        name: 'polygon',
+        pointers: pointers.map(point => [point.x, point.y]).flat(),
+        radius: 0,
+        fill: this.colorFill,
+        left: newLeft,
+        top: newTop,
+        stroke: this.colorBorder,
+      }, true)
       this.canvas.add(this.regularPolygon)
       this.canvas.requestRenderAll()
     }
@@ -89,15 +123,6 @@ export class RegularPolygonService {
     return points
   }
 
-  private setPoints(pointers: fabric.Point[]): void {
-    const pointsPoly = this.regularPolygon?.get('points') as fabric.Point[]
-    pointsPoly.map((point, key) => {
-      point.x = pointers[key].x
-      point.y = pointers[key].y
-    })
-    this.regularPolygon?.set('dirty', true)
-  }
-
   private stopDrawingRegularPolygon(): void {
     this.mouseDown = false
   }
@@ -106,5 +131,41 @@ export class RegularPolygonService {
     this.canvas.off('mouse:down', this.mouseDownHandler)
     this.canvas.off('mouse:move', this.mouseMoveHandler)
     this.canvas.off('mouse:up', this.mouseUpHandler)
+  }
+
+  public drawRegularPolygonByObject(regularPolygon: any): void {
+    this.regularPolygon = new fabric.Polygon(this.createFabricPoints(regularPolygon.pointers), {
+      fill: regularPolygon.fill,
+      left: regularPolygon.left,
+      top: regularPolygon.top,
+      stroke: regularPolygon.stroke,
+      strokeWidth: 15,
+      objectCaching: false,
+    })
+    this.canvas.add(this.regularPolygon)
+    this.figuresService.addFigure({
+      name: 'polygon',
+      pointers: regularPolygon.pointers,
+      radius: 0,
+      fill: regularPolygon.fill,
+      left: regularPolygon.left,
+      top: regularPolygon.top,
+      stroke: regularPolygon.stroke,
+    }, false)
+    this.canvas.requestRenderAll()
+
+  }
+
+  private createFabricPoints(numbers: number[]): fabric.Point[] {
+    const fabricPoints: fabric.Point[] = [];
+  
+    for (let i = 0; i < numbers.length; i += 2) {
+      const x = numbers[i];
+      const y = numbers[i + 1];
+      const point: fabric.Point = new fabric.Point(x, y);
+      fabricPoints.push(point);
+    }
+  
+    return fabricPoints;
   }
 }

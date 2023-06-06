@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { fabric } from 'fabric'
+import { ColorsService } from './colors.service';
+import { FiguresService } from './figures.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +10,16 @@ export class LineService {
   private canvas!: fabric.Canvas
   private line: fabric.Line | null = null
   private mouseDown: boolean = false
+  private initPointer: number[] = []
+  private colorFill: string = ''
   private mouseDownHandler?: (event: fabric.IEvent) => void 
   private mouseMoveHandler?: (event: fabric.IEvent) => void
   private mouseUpHandler?: (event: fabric.IEvent) => void
+
+  constructor(
+    private colorsService: ColorsService,
+    private figuresServices: FiguresService
+  ) {}
 
   public setCanvas(_canvas: fabric.Canvas): void {
     this.canvas = _canvas
@@ -31,12 +40,24 @@ export class LineService {
     this.mouseDown = true
 
     if( pointer ){
-      this.line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
-        stroke: '#EEEEEE',
+      this.colorFill = this.colorsService.getColorFill()
+      this.initPointer = [pointer.x, pointer.y]
+      const newPointers = [pointer.x, pointer.y, pointer.x, pointer.y]
+      this.line = new fabric.Line(newPointers , {
+        stroke: this.colorFill,
         strokeWidth: 5,
         selectable: false
       })
       this.canvas.add(this.line)
+      this.figuresServices.addFigure({
+        name: 'line',
+        pointers: newPointers,
+        radius: 0,
+        fill: this.colorFill,
+        left: 0,
+        top: 0,
+        stroke: '',
+      }, true)
       this.canvas.requestRenderAll()
     }
   }
@@ -44,10 +65,25 @@ export class LineService {
   private startDrawingLine(event: fabric.IEvent): void {
     if( this.mouseDown ){
       const pointer = this.canvas.getPointer(event.e)
+      const newPointers = [
+        this.initPointer[0],
+        this.initPointer[1],
+        pointer.x,
+        pointer.y
+      ]
       this.line?.set({
         x2: pointer?.x,
         y2: pointer?.y
       })
+      this.figuresServices.updateFigure({
+        name: 'line',
+        pointers: newPointers,
+        radius: 0,
+        fill: this.colorFill,
+        left: 0,
+        top: 0,
+        stroke: '',
+      }, true)
       this.canvas.requestRenderAll()
     }
   }
@@ -60,5 +96,28 @@ export class LineService {
     this.canvas.off('mouse:down', this.mouseDownHandler)
     this.canvas.off('mouse:move', this.mouseMoveHandler)
     this.canvas.off('mouse:up', this.mouseUpHandler)
+  }
+
+  public getLine(): fabric.Line | null {
+    return this.line
+  }
+
+  public drawLineByObject(line: any): void {
+    this.line = new fabric.Line(line.pointers , {
+      stroke: line.fill,
+      strokeWidth: 5,
+      selectable: false
+    })
+    this.canvas.add(this.line)
+    this.figuresServices.addFigure({
+      name: 'line',
+      pointers: line.pointers,
+      radius: 0,
+      fill: line.fill,
+      left: 0,
+      top: 0,
+      stroke: '',
+    }, false)
+    this.canvas.requestRenderAll()
   }
 }
