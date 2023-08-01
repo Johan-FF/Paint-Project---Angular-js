@@ -2,6 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.6.
 
+![ezgif com-video-to-gif](https://github.com/Johan-FF/Paint-Project---Angular-js/assets/94552691/2c686b66-00d2-4e30-ad75-c0bd4d71a613)
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
